@@ -284,10 +284,16 @@ input, textarea, select{ font-family: inherit; font-size: 1rem; }
 }
 
 @media (max-width: 640px){
-  .hero{ padding-top: 180px; }
-  .hero-art{ max-width: 220px; }
-  .breathe-ring{ width: 100px; height: 100px; }
-  .breathe-dot{ width: 9px; height: 9px; }
+  .hero{ padding-top: 160px; }
+  .hero-art{ max-width: 200px; padding-top: 40px; }
+  .hero-banner-badge{ top: 14px; }
+  .hero-banner-badge img{ width: 62%; }
+  .breathe-ring{ width: 90px; height: 90px; }
+  .breathe-dot{ width: 8px; height: 8px; }
+  @keyframes breathe{
+    0%, 100%{ transform: scale(0.9); }
+    50%{ transform: scale(1.0); }
+  }
 }
 /* =========================================================================
    REVEAL ON SCROLL
