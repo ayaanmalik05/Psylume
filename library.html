@@ -666,7 +666,6 @@ input, textarea, select{ font-family: inherit; font-size: 1rem; }
 .px-sec a{ color:var(--primary-deep); font-weight:600; }
 .px-sec a:hover{ text-decoration:underline; }
 .px-tools-notice{ margin-bottom:28px; }
-</style>
 
 /* =========================================================================
    RESOURCE LIBRARY PAGE
@@ -945,7 +944,7 @@ input, textarea, select{ font-family: inherit; font-size: 1rem; }
   var keys = Object.keys(CATS);
 
   function cardHtml(x){
-    var link = x.u ? '<a href="'+x.u+'" target="_blank" rel="noopener">Open resource →</a>'
+    var link = x.u ? '<a href="'+x.u+'" target="_blank" rel="noopener">'+(x.u.indexOf('uploads/')===0?'Download PDF →':'Open resource →')+'</a>'
                    : '<a href="https://www.google.com/search?q='+encodeURIComponent(x.t)+'" target="_blank" rel="noopener">Find it →</a>';
     return '<div class="px-card"><span class="px-badge">'+x.k+'</span><h4>'+x.t+'</h4><p>'+x.d+'</p>'+link+'</div>';
   }
@@ -983,6 +982,14 @@ input, textarea, select{ font-family: inherit; font-size: 1rem; }
   var h = location.hash.replace('#','');
   if (CATS[h]) state.cat = h;
   renderAll();
+
+  /* Resources added through admin.html live in resources.json:
+     [{cat:'psychology'|'mental'|'sociology', k:'Articles', t:'Title', d:'Description', u:'link or uploads/file.pdf'}] */
+  fetch('resources.json', {cache:'no-store'}).then(function(res){ return res.ok ? res.json() : []; }).then(function(list){
+    if (!Array.isArray(list) || !list.length) return;
+    list.forEach(function(x){ if (CATS[x.cat] && x.t) CATS[x.cat].items.unshift(r(x.t, x.k||'Articles', x.d||'', x.u||'')); });
+    renderAll();
+  }).catch(function(){});
 
   $('helpGrid').innerHTML = HELP.map(function(x){
     return '<div class="px-card"><span class="px-badge">Support</span><h4>'+x[0]+'</h4><p>'+x[1]+'</p>'+(x[2]?'<a href="'+x[2]+'" target="_blank" rel="noopener">Visit →</a>':'')+'</div>';
